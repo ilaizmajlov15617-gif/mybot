@@ -1,0 +1,19 @@
+import telebot
+
+# Твой токен уже здесь
+TOKEN = "8352938832:AAGooh41WdnQgmcqNxBzYSnC1QvqMpeCqBg"
+
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+    bot.reply_to(message, "Привет! Бот успешно запущен и работает!")
+
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, f"Бот получил сообщение: {message.text}")
+
+if name == "__main__":
+    print("Бот запущен...")
+    # Используем non_stop, чтобы бот не падал при ошибках сети
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
