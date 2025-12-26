@@ -1,24 +1,73 @@
-import telebot
-from telebot import types
-
-TOKEN = "8352938832:AAGooh41WdnQgmcqNxBzYSnC1QvqMpeCqBg"
-bot = telebot.TeleBot(TOKEN)
-
-@bot.message_handler(commands=['start'])
-def start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("👋 Поздороваться")
-    btn2 = types.KeyboardButton("❓ Что ты умеешь?")
-    markup.add(btn1, btn2)
-    bot.send_message(message.chat.id, "Бот обновлен! Выбери действие:", reply_markup=markup)
-
-@bot.message_handler(content_types=['text'])
-def func(message):
-    if(message.text == "👋 Поздороваться"):
-        bot.send_message(message.chat.id, "Привет! Рад тебя видеть!")
-    elif(message.text == "❓ Что ты умеешь?"):
-        bot.send_message(message.chat.id, "Я пока только учусь, но уже живу на хостинге!")
+bot.delete_message(call.message.chat.id, call.message.message_id)
+        except:
+            pass
+        show_player_count(call.message.chat.id)
     else:
-        bot.send_message(message.chat.id, "Я тебя не понимаю, нажми на кнопку.")
+        bot.answer_callback_query(call.id, "Сначала подпишись!", show_alert=True)
 
-bot.infinity_polling()
+def show_player_count(chat_id):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    markup.add("3", "4", "5", "6")
+    bot.send_message(chat_id, "Сколько человек играет?", reply_markup=markup)
+
+@bot.message_handler(func=lambda m: m.text in ["3", "4", "5", "6"])
+def select_category(message):
+    game_data[message.chat.id] = {"count": int(message.text), "current": 1}
+    markup = types.InlineKeyboardMarkup()
+    for cat in data_storage.keys():
+        markup.add(types.InlineKeyboardButton(cat, callback_data=f"cat_{cat}"))
+    bot.send_message(message.chat.id, "Выбери тематику раунда:", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith("cat_"))
+def start_game(call):
+    category_name = call.data.replace("cat_", "")
+    chat_id = call.message.chat.id
+    
+    word = random.choice(list(data_storage[category_name].keys()))
+    desc = data_storage[category_name][word]
+    
+    game_data[chat_id].update({
+        "mafia_index": random.randint(1, game_data[chat_id]["count"]),
+        "word": word,
+        "desc": desc,
+        "category": category_name
+    })
+    
+    bot.delete_message(chat_id, call.message.message_id)
+    send_turn(chat_id)
+
+def send_turn(chat_id):
+    data = game_data[chat_id]
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("👀 УЗНАТЬ РОЛЬ", callback_data="reveal_role"))
+    bot.send_message(chat_id, f"🎲 Игрок №{data['current']}, твой ход!", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "reveal_role")
+def reveal(call):
+    chat_id = call.message.chat.id
+    data = game_data[chat_id]
+    
+    if data["current"] == data["mafia_index"]:
+        text = "🕶 ТЫ МАФИЯ!\n\nТвоя задача — не спалиться и угадать предмет по разговорам мирных."
+    else:
+        text = f"🎤 ТЫ МИРНЫЙ!\n\nТема: {data['category']}\nОбъект: {data['word']}\nИнфо: {data['desc']}"
+    
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("❌ СКРЫТЬ", callback_data="next_player"))
+    bot.edit_message_text(text, chat_id, call.message.message_id, reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "next_player")
+def next_p(call):
+    chat_id = call.message.chat.id
+    bot.delete_message(chat_id, call.message.message_id)
+    
+    if game_data[chat_id]["current"] < game_data[chat_id]["count"]:
+        game_data[chat_id]["current"] += 1
+        send_turn(chat_id)
+    else:
+        bot.send_message(chat_id, "🔥 Все роли розданы!\n\nНачинайте обсуждение. Кто мафия?")
+        del game_data[chat_id]
+
+if name == "__main__":
+    print("Бот запущен!")
+    bot.infinity_polling()
