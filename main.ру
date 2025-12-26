@@ -1,6 +1,5 @@
 import telebot
 
-# Твой токен уже здесь
 TOKEN = "8352938832:AAGooh41WdnQgmcqNxBzYSnC1QvqMpeCqBg"
 
 bot = telebot.TeleBot(TOKEN)
@@ -15,5 +14,4 @@ def echo_all(message):
 
 if name == "__main__":
     print("Бот запущен...")
-    # Используем non_stop, чтобы бот не падал при ошибках сети
-    bot.infinity_polling(timeout=10, long_polling_timeout=5)
+    bot.infinity_polling(timeout=10, long_polling_timeout=5
