@@ -8,32 +8,29 @@ CHANNEL_ID = '@swag40444'
 
 bot = telebot.TeleBot(TOKEN)
 
-# --- БАЗА ДАННЫХ С ФОТО ---
+# --- БАЗА ДАННЫХ ---
 data_storage = {
     "РЕПЕРЫ": {
-        "Бунтовский": {"desc": "Исполнитель", "img": "https://i.ytimg.com/vi/b_KqFf_X5m8/maxresdefault.jpg"},
-        "Платина": {"desc": "Роберт Плаудис", "img": "https://images.skylines.gdn/v1/artists/5772/media/ca42d689-53e7-48f0-be2d-f9e403d64c01.jpg"},
-        "OG Buda": {"desc": "Григорий Ляхов", "img": "https://images.skylines.gdn/v1/artists/5730/media/121516e4-4d1a-42c2-b94d-4566a5039e10.jpg"},
-        "Mayot": {"desc": "Артем Никитин", "img": "https://rhymemag.com/wp-content/uploads/2020/09/mayot-shlyapa.jpg"},
-        "Toxi$": {"desc": "Андрей Смелянский", "img": "https://avatars.mds.yandex.net/get-altay/10636361/2a0000018b105d1e6709848f0761502f6430/orig"},
-        "Big Baby Tape": {"desc": "Егор Ракитин", "img": "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/e04505f0-6c9e-4e4c-8367-3474f7626372/orig"}
+        "Бунтовский": "Исполнитель", "Платина": "Роберт Плаудис", "OG Buda": "Григорий Ляхов", 
+        "Mayot": "Артем Никитин", "Toxi$": "Андрей Смелянский", "Big Baby Tape": "Егор Ракитин", 
+        "Morgenshtern": "Алишер", "Scally Milano": "Даниил Слонов", "163ONMYNECK": "Роман Щуров", 
+        "Bushido Zho": "Жоас Мапуа", "Soda Luv": "Владислав Т.", "Obladaet": "Назар Вотяков", 
+        "Kizaru": "Олег Н.", "Friendly Thug 52": "Александр С.", "Heronwater": "Арсений Г.", "Yanix": "Янис Б."
     },
     "МАШИНЫ": {
-        "BMW M5": {"desc": "Немецкий седан", "img": "https://avatars.mds.yandex.net/get-verba/1030388/2a000001815f9b40742d93e18001712a8637/orig"},
-        "Mercedes G63": {"desc": "Внедорожник", "img": "https://avatars.mds.yandex.net/get-verba/216201/2a00000178457c617b76e10986518a4a2d59/orig"},
-        "Lada Priora": {"desc": "Отечественный авто", "img": "https://s.auto.drom.ru/i24213/pubs/4/47957/2493390.jpg"},
-        "Tesla Model S": {"desc": "Электрокар", "img": "https://motor.ru/imgs/2021/01/28/09/4474718/e79f60f6448a349c2889e496b1b26871a2a472c6.jpg"}
+        "BMW M5": "Немецкий седан", "Mercedes G63": "Внедорожник", "Lada Priora": "Отечественный авто", 
+        "Toyota Camry": "Японский седан", "Tesla Model S": "Электрокар", "Audi RS6": "Универсал", 
+        "Porsche 911": "Спорткар", "Nissan GTR": "Японский спорткар", "Rolls-Royce": "Люкс", "Lamborghini": "Суперкар"
     },
     "ИГРЫ": {
-        "Minecraft": {"desc": "Песочница", "img": "https://upload.wikimedia.org/wikipedia/ru/3/3f/Minecraft_block.png"},
-        "CS 2": {"desc": "Шутер", "img": "https://escorenews.com/storage/2023/03/22/8da16e87f8.jpg"},
-        "Dota 2": {"desc": "MOBA", "img": "https://cdn.akamai.steamstatic.com/apps/dota2/images/dota2_social.jpg"},
-        "Brawl Stars": {"desc": "Мобильная игра", "img": "https://m.media-amazon.com/images/M/MV5BMGY3N2ViYjAtN2VlYS00ZTk0LWFhN2QtMmJlOTI4NjgxNGE0XkEyXkFqcGdeQXVyMTI0MzA4MzE5._V1_.jpg"}
+        "Minecraft": "Песочница", "CS 2": "Шутер", "Dota 2": "MOBA", "GTA 5": "Экшен", 
+        "Brawl Stars": "Мобильная игра", "Roblox": "Платформа", "Fortnite": "Батл рояль", 
+        "PUBG": "Выживание", "FIFA": "Футбол", "Among Us": "Детектив"
     },
     "ЕДА": {
-        "Шаурма": {"desc": "Мясо в лаваше", "img": "https://povar.ru/uploads/3a/81/2a/39/domashnyaya_shaurma_s_kuricei-542157.JPG"},
-        "Пицца": {"desc": "Тесто с сыром", "img": "https://cdn.papajohns.ru/images/catalog/thumbs/full/Pepperoni-traditional.jpg"},
-        "Борщ": {"desc": "Суп", "img": "https://img.delo-vcusa.ru/2017/05/Klassicheskiy-borshh.jpg"}
+        "Шаурма": "Мясо в лаваше", "Пицца": "Тесто с сыром", "Борщ": "Суп", 
+        "Суши": "Рис с рыбой", "Бургер": "Булка с котлетой", "Пельмени": "Мясо в тесте", 
+        "Хинкали": "Грузинское блюдо", "Паста": "Макароны", "Стейк": "Мясо", "Плов": "Рис с мясом"
     }
 }
 
@@ -91,7 +88,7 @@ def process_random(message):
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton("Еще раз", callback_data="mode_rand"))
         markup.add(types.InlineKeyboardButton("В меню", callback_data="to_main"))
-        bot.send_message(message.chat.id, f"Результат: {res}", reply_markup=markup)
+bot.send_message(message.chat.id, f"Результат: {res}", reply_markup=markup)
     except:
         bot.send_message(message.chat.id, "Ошибка. Введите два числа через пробел.")
         main_menu(message.chat.id)
@@ -124,11 +121,11 @@ def start_game(call):
     category_name = call.data.replace("cat_", "")
     chat_id = call.message.chat.id
     word = random.choice(list(data_storage[category_name].keys()))
-    info = data_storage[category_name][word]
+    desc = data_storage[category_name][word]
     
     game_data[chat_id].update({
         "mafia_index": random.randint(1, game_data[chat_id]["count"]),
-        "word": word, "desc": info["desc"], "img": info.get("img"), "category": category_name
+        "word": word, "desc": desc, "category": category_name
     })
     try: bot.delete_message(chat_id, call.message.message_id)
     except: pass
@@ -148,23 +145,16 @@ def reveal(call):
     markup.add(types.InlineKeyboardButton("СКРЫТЬ", callback_data="next_player"))
     
     if data["current"] == data["mafia_index"]:
-        bot.send_message(chat_id, "ВЫ ШПИОН\n\nВаша задача — не спались", reply_markup=markup)
+        text = "ВЫ ШПИОН\n\nВаша задача — не спались"
     else:
         text = f"ВЫ МИРНЫЙ\n\nТема: {data['category']}\nОбъект: {data['word']}\nИнфо: {data['desc']}"
-        if data.get("img"):
-            try: bot.send_photo(chat_id, data["img"], caption=text, reply_markup=markup)
-            except: bot.send_message(chat_id, text, reply_markup=markup)
-        else:
-            bot.send_message(chat_id, text, reply_markup=markup)
     
-    try: bot.delete_message(chat_id, call.message.message_id)
-    except: pass
+    bot.edit_message_text(text, chat_id, call.message.message_id, reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "next_player")
 def next_p(call):
     chat_id = call.message.chat.id
-    try: bot.
-delete_message(chat_id, call.message.message_id)
+    try: bot.delete_message(chat_id, call.message.message_id)
     except: pass
     if game_data[chat_id]["current"] < game_data[chat_id]["count"]:
         game_data[chat_id]["current"] += 1
