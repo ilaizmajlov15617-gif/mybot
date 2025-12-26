@@ -1,6 +1,5 @@
-bot.delete_message(call.message.chat.id, call.message.message_id)
-        except:
-            pass
+message_id)
+        except: pass
         show_player_count(call.message.chat.id)
     else:
         bot.answer_callback_query(call.id, "Сначала подпишись!", show_alert=True)
@@ -22,17 +21,14 @@ def select_category(message):
 def start_game(call):
     category_name = call.data.replace("cat_", "")
     chat_id = call.message.chat.id
-    
     word = random.choice(list(data_storage[category_name].keys()))
     desc = data_storage[category_name][word]
-    
     game_data[chat_id].update({
         "mafia_index": random.randint(1, game_data[chat_id]["count"]),
         "word": word,
         "desc": desc,
         "category": category_name
     })
-    
     bot.delete_message(chat_id, call.message.message_id)
     send_turn(chat_id)
 
@@ -46,12 +42,10 @@ def send_turn(chat_id):
 def reveal(call):
     chat_id = call.message.chat.id
     data = game_data[chat_id]
-    
     if data["current"] == data["mafia_index"]:
-        text = "🕶 ТЫ МАФИЯ!\n\nТвоя задача — не спалиться и угадать предмет по разговорам мирных."
+        text = "🕶 ТЫ МАФИЯ!\n\nТвоя задача — не спалиться."
     else:
         text = f"🎤 ТЫ МИРНЫЙ!\n\nТема: {data['category']}\nОбъект: {data['word']}\nИнфо: {data['desc']}"
-    
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("❌ СКРЫТЬ", callback_data="next_player"))
     bot.edit_message_text(text, chat_id, call.message.message_id, reply_markup=markup)
@@ -60,14 +54,12 @@ def reveal(call):
 def next_p(call):
     chat_id = call.message.chat.id
     bot.delete_message(chat_id, call.message.message_id)
-    
     if game_data[chat_id]["current"] < game_data[chat_id]["count"]:
         game_data[chat_id]["current"] += 1
         send_turn(chat_id)
     else:
-        bot.send_message(chat_id, "🔥 Все роли розданы!\n\nНачинайте обсуждение. Кто мафия?")
+        bot.send_message(chat_id, "🔥 Все роли розданы! Обсуждайте!")
         del game_data[chat_id]
 
 if name == "__main__":
-    print("Бот запущен!")
     bot.infinity_polling()
